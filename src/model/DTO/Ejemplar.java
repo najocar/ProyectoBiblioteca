@@ -3,8 +3,8 @@ package model.DTO;
 public final class Ejemplar extends Libro{
 	protected int estanteria;
 
-	public Ejemplar(int cod, String titulo, boolean prestado, String isbn, int year, String fecha, int estanteria) {
-		super(cod, titulo, prestado, isbn, year, fecha);
+	public Ejemplar(String titulo, String isbn, int year, int estanteria) {
+		super(titulo, isbn, year);
 		this.estanteria = estanteria;
 	}
 	
@@ -27,6 +27,8 @@ public final class Ejemplar extends Libro{
 	}
 	
 	public boolean addEjemplar(){
+		boolean anadido = false;
 		
+		return anadido;
 	}
 }

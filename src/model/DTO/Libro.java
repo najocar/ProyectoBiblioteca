@@ -6,12 +6,12 @@ public class Libro extends Elemento{
 	protected int year;
 	protected String fecha;
 	
-	public Libro(int cod, String titulo, boolean prestado, String isbn, int year, String fecha) {
-		super(cod, titulo);
-		this.prestado = prestado;
+	public Libro(String titulo, String isbn, int year) {
+		super(titulo);
+		this.prestado = false;
 		this.isbn = isbn;
 		this.year = year;
-		this.fecha = fecha;
+		this.fecha = null;
 	}
 	
 	public Libro() {
@@ -22,7 +22,7 @@ public class Libro extends Elemento{
 		this.fecha = "00-00-0000";
 	}
 
-	public boolean isPrestado() {
+	public boolean getPrestado() {
 		return prestado;
 	}
 

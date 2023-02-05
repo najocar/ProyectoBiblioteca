@@ -3,14 +3,16 @@ package controller;
 import interfaces.iBiblioteca;
 import interfaces.iController;
 import interfaces.iGUI;
-import model.DTO.Bebida;
+import model.DTO.Ejemplar;
 import model.DTO.Elemento;
 import model.DTO.Revista;
 import model.DTO.Usuario;
+import gui.*;
+import model.*;
 
 public class Controller implements iController {
-	private iGUI GUI;
-	private iBiblioteca biblioteca;
+	private iGUI GUI = new GUI();
+	private iBiblioteca biblioteca = new Biblioteca();
 
 	@Override
 	public void empezar() {
@@ -20,18 +22,18 @@ public class Controller implements iController {
 	@Override
 	public void execMainMenu() {
 		int opcion = 0;
-		do {
+	
 			GUI.showMainMenu();
 			opcion = GUI.readInt("Elige una opción: ");
 			controlMainMenu(opcion);
-		} while (opcion != 3);
+
 	}
 
 	@Override
 	public void controlMainMenu(int option) {
 		switch (option) {
 		case 1:
-			
+			GUI.print("prestar libro");
 			break;
 		case 2:
 			execBookMenu();
@@ -42,6 +44,7 @@ public class Controller implements iController {
 
 		default:
 			GUI.print("Incorrecto");
+			execMainMenu();
 			break;
 		}
 
@@ -60,24 +63,32 @@ public class Controller implements iController {
 	@Override
 	public void controlBookMenu(int option) {
 		switch (option) {
+		case 0:
+			execMainMenu();
+			break;
 		case 1:
-			execAddEjemplar();
+			controlAddMenu();
 			break;
 		case 2:
-			showEjemplares();
+			showElementos();
 			break;
 		case 3:
-			showEjemplaresPrestados();
+			showEjemplares();
 			break;
 		case 4:
-			showRevistas();
+			showEjemplaresPrestados();
 			break;
 		case 5:
-			findEjemplar();
+			showRevistas();
 			break;
 		case 6:
-			updateEjemplar();
+			execFindEjemplar();
 			break;
+		case 7:
+			execUpdateEjemplar();
+			break;
+		case 8:
+			execRemoveElemento();
 		default:
 			break;
 		}
@@ -90,15 +101,19 @@ public class Controller implements iController {
 		do {
 			GUI.showUserMenu();
 			opcion = GUI.readInt("Elige una opción: ");
-			controlBookMenu(opcion);
+			controlUserMenu(opcion);
 		} while (opcion != 0);
 	}
 
 	@Override
 	public void controlUserMenu(int option) {
 		switch (option) {
+		case 0:
+			execMainMenu();
+			break;
 		case 1:
 			execAddUsuario();
+			
 			break;
 		case 2:
 			showUsuarios();
@@ -107,7 +122,26 @@ public class Controller implements iController {
 			findUser();
 			break;
 		case 4:
-			updateUser();
+			//execUpdateUser();
+			break;
+		default:
+			break;
+		}
+	}
+	
+	@Override
+	public void controlAddMenu() {
+		int opcion = 0;
+		do {
+			GUI.print("elije una opción: 1 - libro | 2 - revista | 3 - cancelar");
+			opcion = GUI.readInt("Elige una opción: ");
+		}while(opcion > 4 && opcion < 0);
+		switch (opcion) {
+		case 1:
+			execAddEjemplar();
+			break;
+		case 2:
+			execAddRevista();
 			break;
 		default:
 			break;
@@ -116,58 +150,56 @@ public class Controller implements iController {
 
 	@Override
 	public void execAddEjemplar() {
-		int opcion = 0;
-		do {
-			GUI.print("elije una opción: 1 - libro | 2 - revista | 3 - cancelar");
-			opcion = GUI.readInt("Elige una opción: ");
-		}while(opcion < 3 && opcion > 0);
-		switch (opcion) {
-		case 1:
-			String nombre = GUI.print("nombre del libro: ");
-			int precio = miGUI.leeEntero("Precio de la bebida: ");
-			Bebida nueva = new Bebida(nombre, precio);
-			anadirBebida(nueva);
-			break;
-
-		default:
-			break;
-		}
-
+		String titulo = GUI.readString("título del libro: ");
+		String isbn = GUI.readString("ISBN: ");
+		int year = GUI.readInt("año del libro: ");
+		int estanteria = GUI.readInt("estantería: ");
+		Ejemplar nuevo = new Ejemplar(titulo, isbn, year, estanteria);
+		addEjemplar(nuevo);
 	}
 
 	@Override
 	public void execAddRevista() {
-		// TODO Auto-generated method stub
-
+		String titulo = GUI.readString("título revista: ");
+		int num_ed = GUI.readInt("número de edición: ");
+		Revista nueva = new Revista(titulo, num_ed);
+		addEjemplar(nueva);
 	}
 
 	@Override
 	public void execAddUsuario() {
-		// TODO Auto-generated method stub
+		String dni = GUI.readString("DNI: ");
+		String nombre = GUI.readString("nombre: ");
+		Usuario nuevo = new Usuario(dni, nombre);
+		addUsuario(nuevo);
 
 	}
 
 	@Override
 	public void showEjemplares() {
-		// TODO Auto-generated method stub
-
+		String ejemplares = biblioteca.showEjemplares();
+		GUI.print(ejemplares);
 	}
 
 	@Override
 	public void showRevistas() {
-		// TODO Auto-generated method stub
-
+		String revistas = biblioteca.showRevistas();
+		GUI.print(revistas);
 	}
 
 	@Override
 	public void showEjemplaresPrestados() {
-		// TODO Auto-generated method stub
-
+		String ejemplares = biblioteca.showEjemplaresPrestados();
+		GUI.print(ejemplares);
 	}
 
 	@Override
 	public void addEjemplar(Elemento ejemplar) {
-		// TODO Auto-generated method stub
+		if (biblioteca.addEjemplar(ejemplar)) {
+			GUI.print("Añadido correctamente");
+		}else {
+			GUI.print("Error, no ha podido ser insertado");
+		}
 
 	}
 
@@ -179,14 +211,17 @@ public class Controller implements iController {
 
 	@Override
 	public void addUsuario(Usuario usuario) {
-		// TODO Auto-generated method stub
-
+		if (biblioteca.addUsuario(usuario)) {
+			GUI.print("Añadido correctamente");
+		}else {
+			GUI.print("Error, no ha podido ser insertado");
+		}
 	}
 
 	@Override
 	public void showUsuarios() {
-		// TODO Auto-generated method stub
-		
+		String usuarios = biblioteca.showUsuarios();
+		GUI.print(usuarios);
 	}
 
 	@Override
@@ -196,21 +231,67 @@ public class Controller implements iController {
 	}
 
 	@Override
-	public void findEjemplar() {
+	public void findEjemplar(int cod) {
+		String ejemplares = biblioteca.find(cod);
+		GUI.print(ejemplares);
+	}
+
+	@Override
+	public void execRemoveElemento() {
+		int opcion = 0;
+			opcion = GUI.readInt("escribe el código del Elemento que quieres eliminar: ");
+			removeElemento(opcion);
+	}
+
+	@Override
+	public void removeElemento(int cod) {
+		if (biblioteca.removeElemento(cod)) {
+			GUI.print("Eliminado correctamente \n");
+		}else {
+			GUI.print("Error, no ha podido ser eliminado \n");
+		}
+	}
+
+	@Override
+	public void execFindEjemplar() {
+		int opcion = 0;
+		opcion = GUI.readInt("escribe el código del Elemento que quieres buscar: ");
+		findEjemplar(opcion);
+
+	}
+
+	@Override
+	public void showElementos() {
+		String elementos = biblioteca.showElementos();
+		GUI.print(elementos);
+	}
+
+	@Override
+	public void execUpdateUser() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void updateUser() {
+	public void updateUser(int dni) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void updateEjemplar() {
-		// TODO Auto-generated method stub
-		
+	public void execUpdateEjemplar() {
+		int opcion = 0;
+		opcion = GUI.readInt("escribe el código del Elemento que quieres modificar: ");
+		updateEjemplar(opcion);
+	}
+
+	@Override
+	public void updateEjemplar(int cod) {
+		if (biblioteca.updateElemento(cod)) {
+			GUI.print("Modificado correctamente \n");
+		}else {
+			GUI.print("Error, no ha podido ser modificado \n");
+		}
 	}
 
 }

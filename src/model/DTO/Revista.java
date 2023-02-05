@@ -3,8 +3,8 @@ package model.DTO;
 public final class Revista extends Elemento{
 	protected int numEdicion;
 
-	public Revista(int cod, String titulo, int numEdicion) {
-		super(cod, titulo);
+	public Revista(String titulo, int numEdicion) {
+		super(titulo);
 		this.numEdicion = numEdicion;
 	}
 	

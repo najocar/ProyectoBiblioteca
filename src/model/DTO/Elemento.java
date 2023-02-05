@@ -5,10 +5,12 @@ import java.util.Objects;
 public class Elemento {
 	protected int cod;
 	protected String titulo;
+	static private int code = 1;
 	
-	public Elemento(int cod, String titulo) {
-		this.cod = cod;
+	public Elemento(String titulo) {
+		this.cod = code;
 		this.titulo = titulo;
+		code ++;
 	}
 	
 	public Elemento() {

@@ -12,18 +12,25 @@ public interface iController {
 	void controlBookMenu(int option);
 	void execUserMenu();
 	void controlUserMenu(int option);
+	void controlAddMenu();
 	void execAddEjemplar();
 	void addEjemplar(Elemento ejemplar);
 	void execAddRevista();
 	void addRevista(Revista revista);
 	void execAddUsuario();
 	void addUsuario(Usuario usuario);
+	void showElementos();
 	void showEjemplares();
 	void showRevistas();
 	void showEjemplaresPrestados();
 	void showUsuarios();
 	void findUser();
-	void findEjemplar();
-	void updateUser();
-	void updateEjemplar();
+	void execFindEjemplar();
+	void findEjemplar(int cod);
+	void execUpdateUser();
+	void updateUser(int dni);
+	void execUpdateEjemplar();
+	void updateEjemplar(int cod);
+	void execRemoveElemento();
+	void removeElemento(int cod);
 }
